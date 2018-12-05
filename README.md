@@ -4,7 +4,7 @@
 ### 与miniProxy不同点：
 没什么不同，就是改了下显示界面，简洁大方适应手机
 
-![cmd-markdown-logo](https://github.com/coolssr/miniProxy-embellish/tu.jpg)
+![cmd-markdown-logo](tu.jpg)
 
 在线代理这个东西理解起来也很简单，就是一个基于web架构的程序，在以前，在线代理最多是用来刷链接，因为IP属于代理服务器，所以就能达到刷邀请，或者刷点击的作用。
 很多时候，其实我们也就是想谷歌搜索一下，查点资料，也没必要搞一个SSR服务器，只需要部署一个简单代理即可。
