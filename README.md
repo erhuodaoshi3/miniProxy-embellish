@@ -3,7 +3,7 @@
 
 ### 与miniProxy不同点：
 * 没什么不同，就是改了下显示界面，简洁大方适应手机
-* 还有就是默认跳转改成https://duckduckgo.com/即鸭鸭走搜索引擎，不比谷歌差，而代理谷歌容易出现验证。
+* 还有就是默认跳转改成duckduckgo.com，即鸭鸭走搜索引擎，不比谷歌差，而代理谷歌容易出现验证。
 
 ![cmd-markdown-logo](tu.jpg)
 
