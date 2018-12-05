@@ -280,7 +280,7 @@ if (empty($url)) {
       
       
 <html>
-    
+    <!-- https://github.com/coolssr/miniProxy-embellish --!>
     <head>
         <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
         <meta content=\"zh-CN\" http-equiv=\"Content-Language\">
@@ -472,7 +472,7 @@ if (empty($url)) {
         </style>
         <script src=\"jquery.min.js\"></script>
     </head>
-    
+    <!-- https://github.com/coolssr/miniProxy-embellish --!>
     <body>
         <div class=\"frosted-glass\"></div>
         <div id=\"content\">
