@@ -32,7 +32,7 @@ $startURL = "";
 //When no $startURL is configured above, miniProxy will show its own landing page with a URL form field
 //and the configured example URL. The example URL appears in the instructional text on the miniProxy landing page,
 //and is proxied when pressing the 'Proxy It!' button on the landing page if its URL form is left blank.
-$landingExampleURL = "https://duckduckgo.com/";
+$landingExampleURL = "https://duckduckgo.com";
 
 /****************************** END CONFIGURATION ******************************/
 
@@ -42,7 +42,7 @@ if (version_compare(PHP_VERSION, "5.4.7", "<")) {
   die("miniProxy requires PHP version 5.4.7 or later.");
 }
 
-$requiredExtensions = ['curl', 'mbstring', 'xml'];
+$requiredExtensions = ["curl", "mbstring", "xml"];
 foreach($requiredExtensions as $requiredExtension) {
   if (!extension_loaded($requiredExtension)) {
     die("miniProxy requires PHP's \"" . $requiredExtension . "\" extension. Please install/enable it on your server and try again.");
@@ -120,7 +120,7 @@ function makeRequest($url) {
     "Origin"
   ));
 
-  array_change_key_case($removedHeaders, CASE_LOWER);
+  $removedHeaders = array_map("strtolower", $removedHeaders);
 
   curl_setopt($ch, CURLOPT_ENCODING, "");
   //Transform the associative array from getallheaders() into an
@@ -134,10 +134,10 @@ function makeRequest($url) {
   }
   //Any `origin` header sent by the browser will refer to the proxy itself.
   //If an `origin` header is present in the request, rewrite it to point to the correct origin.
-  if (array_key_exists('origin', $removedHeaders)) {
+  if (in_array("origin", $removedHeaders)) {
     $urlParts = parse_url($url);
-    $port = $urlParts['port'];
-    $curlRequestHeaders[] = "Origin: " . $urlParts['scheme'] . "://" . $urlParts['host'] . (empty($port) ? "" : ":" . $port);
+    $port = $urlParts["port"];
+    $curlRequestHeaders[] = "Origin: " . $urlParts["scheme"] . "://" . $urlParts["host"] . (empty($port) ? "" : ":" . $port);
   };
   curl_setopt($ch, CURLOPT_HTTPHEADER, $curlRequestHeaders);
 
@@ -276,10 +276,7 @@ if (isset($_POST["miniProxyFormAction"])) {
 }
 if (empty($url)) {
     if (empty($startURL)) {
-      die("
-      
-      
-<html>
+      die("<html>
     <!-- https://github.com/coolssr/miniProxy-embellish --!>
     <head>
         <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
@@ -516,13 +513,7 @@ if (empty($url)) {
             <br/>
         </div>
     </body>
-
-</html>
-      
-      
-      
-      
-      ");
+</html>");
     } else {
       $url = $startURL;
     }
@@ -670,7 +661,8 @@ if (stripos($contentType, "text/html") !== false) {
   foreach($proxifyAttributes as $attrName) {
     foreach($xpath->query("//*[@" . $attrName . "]") as $element) { //For every element with the given attribute...
       $attrContent = $element->getAttribute($attrName);
-      if ($attrName == "href" && preg_match("/^(about|javascript|magnet|mailto):/i", $attrContent)) continue;
+      if ($attrName == "href" && preg_match("/^(about|javascript|magnet|mailto):|#/i", $attrContent)) continue;
+      if ($attrName == "src" && preg_match("/^(data):/i", $attrContent)) continue;
       $attrContent = rel2abs($attrContent, $url);
       $attrContent = PROXY_PREFIX . $attrContent;
       $element->setAttribute($attrName, $attrContent);
@@ -753,7 +745,9 @@ if (stripos($contentType, "text/html") !== false) {
               if (arguments[1] !== null && arguments[1] !== undefined) {
                 var url = arguments[1];
                 url = rel2abs("' . $url . '", url);
-                url = "' . PROXY_PREFIX . '" + url;
+                if (url.indexOf("' . PROXY_PREFIX . '") == -1) {
+                  url = "' . PROXY_PREFIX . '" + url;
+                }
                 arguments[1] = url;
               }
               return proxied.apply(this, [].slice.call(arguments));
